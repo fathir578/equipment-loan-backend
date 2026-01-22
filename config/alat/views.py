@@ -1,9 +1,8 @@
 # from django.shortcuts import render
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.generics import RetrieveAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from .models import Alat
 from .serializers import AlatSerializer
 
@@ -20,11 +19,11 @@ class AlatListCreateView (APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
-    
-class AlatDetailView(RetrieveAPIView):
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
+
+class AlatDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Alat.objects.all()
-    serializer_class = AlatSerializer    
+    serializer_class = AlatSerializer
 
 
 # Create your views here.
