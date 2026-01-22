@@ -1,7 +1,7 @@
-from django.urls import path
-from .views import AlatListCreateView, AlatDetailView
+from rest_framework.routers import DefaultRouter
+from .views import AlatViewSet
 
-urlpatterns = [
-    path('alat/', AlatListCreateView.as_view(), name='alat-list-create'),
-    path('alat/<int:pk>/', AlatDetailView.as_view()),
-]
+router = DefaultRouter()
+router.register(r'alat', AlatViewSet, basename='alat')
+
+urlpatterns = router.urls
