@@ -40,10 +40,19 @@ INSTALLED_APPS = [
     'rest_framework',
     'alat',
     'peminjaman',
-    'authentication'
+    'authentication',
+    'rest_framework.authtoken',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+
 AUTH_USER_MODEL = 'authentication.User'
+
     
 
 MIDDLEWARE = [
