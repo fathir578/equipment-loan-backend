@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-# from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from .models import Alat
 from .serializers import AlatSerializer
 from .permision import IsAdminOrReadOnly
@@ -7,4 +7,7 @@ from .permision import IsAdminOrReadOnly
 class AlatViewSet(ModelViewSet):
     queryset = Alat.objects.all()
     serializer_class = AlatSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [
+        IsAuthenticated,
+        IsAdminOrReadOnly
+        ]
