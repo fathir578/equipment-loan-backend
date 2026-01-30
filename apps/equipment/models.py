@@ -53,3 +53,33 @@ class UserManager(BaseUserManager):
             raise ValueError('Superuser harus memiliki is_superuser=True')
         return self.create_user(username, email, password, **extra_fields)
 
+
+    class User(AbstractBaseUser, PermissionsMixin):
+        phone_regex = RegexValidator(
+            regex = r'^\+62|62|0)[0-9]{9,12}$',
+            message = "format nomor telepom tidak valid. Contoh: +6281234567890 atau 081234567890"
+        )
+        ROLE_CHOICES = [
+            ('admin', 'Admin'),
+            ('petugas', 'Petugas'),
+            ('peminjam', 'Peminjam'),
+
+            ]
+
+        username = models.CharField(
+            max_length=150,
+            unique = True,
+            db_index = True,
+            help_text = 'Username unik untuk login (max 150 karakter)')
+
+        email = models.EmailField(
+                    unique = True,
+                    db_index = True,
+                    help_text = 'email address unik'
+                )
+
+
+
+
+
+
