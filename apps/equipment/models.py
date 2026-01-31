@@ -84,6 +84,19 @@ class UserManager(BaseUserManager):
             ''
         )
 
+        full_name = models.CharField(
+            max_length=255,
+            help_text='Nama lengkap user'
+        )
+
+        role = models.CharField(
+            max_length=20,
+            choices=ROLE_CHOICES,
+            default='peminjam',
+            help_text='Peran user dalam sistem'
+        )
+
+
 
 
 
