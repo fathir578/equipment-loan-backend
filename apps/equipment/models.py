@@ -77,7 +77,12 @@ class UserManager(BaseUserManager):
                     db_index = True,
                     help_text = 'email address unik'
                 )
-
+        
+        password = models.CharField(
+            max_length= 128,
+            help_text='Hashed password'
+            ''
+        )
 
 
 
