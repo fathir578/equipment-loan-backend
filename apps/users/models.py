@@ -27,26 +27,6 @@ class UserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
     
 class User(AbstractBaseUser, PermissionsMixin):
-    """
-    Custom User model untuk sistem peminjaman alat.
-
-    Menyimpan informasi dasar tentang user termasuk role (admin, petugas, peminjam).
-    Menggunakan email sebagai identifier utama daripada username.
-
-    Attributes:
-        id (BigAutoField): Primary key unik.
-        username (CharField): Username unik untuk login.
-        email (EmailField): Alamat email unik untuk login dan komunikasi.
-        full_name (CharField): Nama lengkap user.
-        role (CharField): Role user dalam sistem ('admin', 'petugas', 'peminjam').
-        phone_number (CharField): Nomor telepon user.
-        is_active (BooleanField): Status akun aktif/tidak.
-        is_staff (BooleanField): Izin untuk mengakses admin site.
-        is_superuser (BooleanField): Izin untuk akses tingkat superuser.
-        created_at (DateTimeField): Waktu pembuatan akun.
-        updated_at (DateTimeField): Waktu terakhir akun diperbarui.
-        last_login (DateTimeField): Waktu login terakhir.
-    """
     ROLE_CHOICES = [
         ('admin', 'Admin'),
         ('petugas', 'Petugas'),
@@ -75,3 +55,27 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'  # Gunakan email untuk login
     REQUIRED_FIELDS = ['username', 'full_name']  # Field wajib selain email dan password
 
+
+class Meta:
+    verbose_name = 'User'
+    verbose_name_plural = 'Users'
+        # Tambahkan indexes untuk kolom yang sering digunakan untuk pencarian/filter
+    indexes = [
+            models.Index(fields=['email']),
+            models.Index(fields=['username']),
+            models.Index(fields=['role']),
+            models.Index(fields=['created_at']),
+        ]
+
+    def __str__(self):
+        return f"{self.full_name} ({self.email})"
+
+    def save(self, *args, **kwargs):
+        # Jika role adalah admin atau petugas, pastikan is_staff = True
+        if self.role in ['admin', 'petugas']:
+            self.is_staff = True
+        # Jika role bukan admin, pastikan is_superuser = False
+        if self.role != 'admin':
+            self.is_superuser = False
+
+        super().save(*args, **kwargs)
