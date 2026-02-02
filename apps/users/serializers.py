@@ -29,10 +29,27 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        """
-        Membuat user baru dengan password yang di-hash.
-        """
         validated_data.pop('password_confirm') # Hapus password_confirm sebelum menyimpan
         # Gunakan method create_user dari custom UserManager untuk hashing
         user = User.objects.create_user(**validated_data)
         return user
+    class UserUpdateSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = [
+                'username', 'email', 'full_name', 'role',
+                'phone_number', 'is_active'
+            ]
+        
+        def validate_email(self, value ):
+            user = self.context['request'].user
+            if User.objects.filter(email=value).exclude(pk=user.pk).exists():
+                raise serializers.ValidationError("Email ini sudah digunakan oleh user lain.")
+            return value
+        
+        def validate_username(self, value):
+
+            user = self.context['request'].user
+            if User.objects.filter(username=value).exclude(pk=user.pk).exists():
+                raise serializers.ValidationError("Username ini sudah digunakan oleh user lain.")
+            return value
