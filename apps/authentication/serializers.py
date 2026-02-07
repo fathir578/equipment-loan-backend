@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
-from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 from ..users.models import User
 
 class CustomTokenObtainPairSerializer(serializers.Serializer):
@@ -40,6 +40,17 @@ class CustomTokenObtainPairSerializer(serializers.Serializer):
         }
         token_data.update({'user': user_data})
         return token_data 
+
+
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        write_only=True,
+        validators=[validate_password],
+        min_length=8
+
+    )
+    password_confirm = serializers.charfield(write_only=True)
+
 
 
 
