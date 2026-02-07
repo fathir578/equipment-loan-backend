@@ -23,3 +23,22 @@ class isPemnjam(BasePermission):
 
     def has_permission(self, request, view):
         return request.user.is_authenticated and request.user.role == 'peminjam'
+
+class isAdminOrPetugas(BasePermission):
+    """
+    Allows access to admin or petugas users.
+    """
+
+    def has_permission(self, request, view):
+        return (
+            request.user.is_authenticated and request.user.role in ['admin', 'petugas']
+
+        )
+    
+class isOwnerOrAdmin(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.user.role == 'admin':
+            return  True
+        if hasattr(obj, 'user'):
+            return obj.user == request.user
+        return False
